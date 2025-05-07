@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "doc-query-server": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/drorbeneliyahu/Documents/GitHub/MCPDocSearch",
+        "run",
+        "python",
+        "-m",
+        "mcp_server.main"
+      ],
+      "env": {}
+    }
+  }
+} 
