@@ -1,0 +1,31 @@
+# fly.toml app configuration file generated for mcpdocsearch-ancient-pine-8229 on 2025-05-08T10:44:40+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'mcpdocsearch-ancient-pine-8229'
+primary_region = 'lhr'
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    grace_period = "60s"
+    interval = "30s"
+    method = "GET"
+    path = "/"
+    port = 8080
+    protocol = "http"
+    timeout = "10s"
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
