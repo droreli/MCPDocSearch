@@ -1,15 +1,21 @@
 import re
 import pickle  # For caching
-import os  # For stat
-import sys  # Ensure sys is imported for stderr usage throughout
+import os  # For stat, getenv
+import sys
+from typing import List, Dict, Union, Any
+import numpy as np
+from pathlib import Path
 
-from typing import List, Dict, Union, Any  # Added Any
-
-import numpy as np  # For np.ndarray type hint
-
-# Import config variables and the embedding model
-from mcp_server.config import STORAGE_DIR, CACHE_FILE_PATH
+from mcp_server.config import STORAGE_DIR as DEFAULT_STORAGE_DIR
 from mcp_server.app import embedding_model
+
+# --- Determine Storage Path ---
+_volume_mount_path = os.getenv("MCP_STORAGE_PATH", "/data/storage") # Default for Fly.io
+STORAGE_DIR = Path(_volume_mount_path)
+CACHE_FILE_PATH = STORAGE_DIR / "document_chunks_cache.pkl"
+
+print(f"Using storage directory: {STORAGE_DIR}", file=sys.stderr)
+print(f"Using cache file path: {CACHE_FILE_PATH}", file=sys.stderr)
 
 # Simple regex to find markdown headings (##, ###, etc.)
 HEADING_RE = re.compile(r"^(#{2,4})\s+(.*)")
@@ -239,7 +245,7 @@ def load_and_chunk_documents():
             )
             try:
                 # Ensure parent directory exists
-                CACHE_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
+                STORAGE_DIR.mkdir(parents=True, exist_ok=True)
                 # Data to cache: tuple of (metadata, chunks)
                 # Using Any for chunk dict value type (mixed str, np.ndarray)
                 data_to_cache: tuple[Dict[str, float], List[Dict[str, Any]]] = (

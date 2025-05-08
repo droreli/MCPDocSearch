@@ -1,5 +1,6 @@
 import traceback
-import sys  # Import sys for stderr usage
+import sys
+import os # Added for environment variables
 
 # Import the shared FastMCP instance
 from mcp_server.app import mcp_server as mcp_app_instance
@@ -10,7 +11,7 @@ from mcp_server.data_loader import load_and_chunk_documents, get_all_chunks
 # Import the tools module to ensure decorators run and register tools
 import mcp_server.mcp_tools  # noqa: F401
 
-# --- Main Execution (for direct run `python -m mcp_server.main`) ---
+# --- Main Execution ---
 if __name__ == "__main__":
     # Load documents synchronously before starting the server
     print("Loading documents...", file=sys.stderr)
@@ -19,13 +20,16 @@ if __name__ == "__main__":
     num_chunks = len(get_all_chunks())
     print(f"Document loading complete. {num_chunks} chunks loaded.", file=sys.stderr)
 
+    # Configuration for TCP server for deployment
+    host = "0.0.0.0"  # Listen on all available network interfaces
+    port = int(os.environ.get("PORT", 8080)) # Use $PORT from environment
+
     try:
-        print("Starting MCP server on STDIO...", file=sys.stderr)
-        # Call run directly on the imported instance
-        mcp_app_instance.run(transport="stdio")
+        print(f"Starting MCP server on TCP {host}:{port}...", file=sys.stderr)
+        # Replace with correct fastmcp TCP startup
+        mcp_app_instance.run(transport="tcp", host=host, port=port)
     except KeyboardInterrupt:
         print("\nServer stopped by user.", file=sys.stderr)
     except Exception as e:
         print(f"An error occurred: {e}", file=sys.stderr)
-        # Print the full traceback to see the sub-exception details
-        traceback.print_exc()  # Prints to stderr by default
+        traceback.print_exc()
