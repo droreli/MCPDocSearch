@@ -11,6 +11,9 @@
         "mcp_server.main"
       ],
       "env": {}
+    },
+    "doc-query-server-fly": {
+      "url": "https://mcpdocsearch-ancient-pine-8229.fly.dev/sse"
     }
   }
 } 

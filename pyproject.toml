@@ -1,17 +1,29 @@
 [project]
-name = "MCPDocSearch"
+name = "mcpdocsearch"
 version = "0.1.0"
-description = "Crawl websites and make documentation searchable via MCP for AI agents."
-readme = "README.md"
-license = { text = "MIT" }
-requires-python = ">=3.11"
+description = ""
+authors = [ {name = "Your Name", email = "you@example.com"} ]
+requires-python = ">=3.10"
 dependencies = [
-    "crawl4ai>=0.5.0.post8",
-    "pathlib>=1.0.1",
-    "rich>=14.0.0",
-    "typer>=0.15.2",
-    "typing-extensions>=4.13.2",
     "fastmcp>=2.0.0",
     "sentence-transformers>=3.0.1",
-    "torch>=2.0.0", # sentence-transformers requires torch
+    "torch>=2.4.0",
+    "typer[rich]>=0.15.2",
+    "beautifulsoup4>=4.12.3",
+    "crawl4ai>=0.3.1",
+    "uvicorn[standard]>=0.30.1"
 ]
+
+[tool.poetry]
+# Explicitly define packages for Poetry build backend
+packages = [
+    { include = "mcp_server" },
+    { include = "crawler_cli" },
+]
+
+[tool.uv]
+# uv specific settings can go here if needed, but dependencies are often in [project] now
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
